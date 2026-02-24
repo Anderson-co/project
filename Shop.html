@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — Temi·Velora·Lux</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #c9847a; --gold: #c4a882; --cream: #fdf6f0; --blush: #f5e8e0;
+    --deep: #1a0f0a; --mauve: #9b6e73; --champagne: #e8d5c4;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Josefin Sans', sans-serif; background: var(--cream); color: var(--deep); cursor: none; overflow-x: hidden; }
+  .cursor { width: 12px; height: 12px; background: var(--rose); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.2s; }
+  .cursor-ring { width: 36px; height: 36px; border: 1px solid var(--rose); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 60px;
+    background: rgba(253,246,240,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(196,168,130,0.2);
+  }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; letter-spacing: 4px; color: var(--deep); text-decoration: none; }
+  .nav-logo span { color: var(--rose); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--deep); text-decoration: none; position: relative; padding-bottom: 4px; transition: color 0.3s; }
+  .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--rose); transition: width 0.4s; }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-links a:hover, .nav-links a.active { color: var(--rose); }
+  .nav-cart { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; background: var(--rose); color: white; padding: 10px 24px; text-decoration: none; transition: background 0.3s; }
+  .nav-cart:hover { background: var(--mauve); }
+
+  /* Shop Hero */
+  .shop-hero {
+    padding: 160px 60px 60px;
+    background: linear-gradient(160deg, var(--blush), var(--cream));
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .shop-hero-title { font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 300; line-height: 1; }
+  .shop-hero-title em { font-style: italic; color: var(--rose); }
+  .shop-hero-right { text-align: right; }
+  .shop-count { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--rose); margin-bottom: 8px; }
+  .shop-sort {
+    display: flex; gap: 12px; align-items: center;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .sort-select {
+    background: white; border: 1px solid var(--champagne);
+    padding: 10px 16px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--deep); outline: none; cursor: none;
+  }
+
+  /* Layout */
+  .shop-layout { display: grid; grid-template-columns: 260px 1fr; min-height: 80vh; }
+
+  /* Sidebar */
+  .sidebar {
+    padding: 40px 32px;
+    border-right: 1px solid rgba(196,168,130,0.2);
+    background: var(--cream);
+    position: sticky; top: 80px; height: fit-content;
+  }
+  .filter-section { margin-bottom: 40px; }
+  .filter-title {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 20px;
+    padding-bottom: 10px; border-bottom: 1px solid rgba(196,168,130,0.3);
+  }
+  .filter-options { display: flex; flex-direction: column; gap: 12px; }
+  .filter-option { display: flex; align-items: center; gap: 12px; cursor: none; }
+  .filter-option input { accent-color: var(--rose); width: 14px; height: 14px; cursor: none; }
+  .filter-option label { font-size: 12px; letter-spacing: 1px; cursor: none; transition: color 0.3s; }
+  .filter-option:hover label { color: var(--rose); }
+  .filter-option span { margin-left: auto; font-size: 10px; color: #9b6e73; }
+
+  /* Price range */
+  .price-range-display { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 11px; letter-spacing: 1px; }
+  .price-slider { width: 100%; accent-color: var(--rose); }
+
+  /* Color swatches */
+  .color-swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+  .swatch {
+    width: 28px; height: 28px; border-radius: 50%;
+    cursor: none; border: 2px solid transparent;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+  .swatch:hover, .swatch.active { border-color: var(--rose); transform: scale(1.15); }
+  .swatch.nudes { background: #d4a898; }
+  .swatch.reds { background: #b83030; }
+  .swatch.pinks { background: #e8849a; }
+  .swatch.berries { background: #7a3a60; }
+  .swatch.neutrals { background: #c4a882; }
+  .swatch.corals { background: #e87050; }
+
+  /* Products Area */
+  .products-area { padding: 40px 48px; }
+  .active-filters { display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap; }
+  .filter-chip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    background: var(--blush);
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s;
+  }
+  .filter-chip:hover { background: var(--champagne); }
+  .chip-x { color: var(--rose); font-size: 14px; }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .product-card {
+    position: relative; cursor: none; text-decoration: none; color: var(--deep);
+    animation: fadeUp 0.6s ease both;
+  }
+  .product-card:nth-child(1) { animation-delay: 0.05s; }
+  .product-card:nth-child(2) { animation-delay: 0.1s; }
+  .product-card:nth-child(3) { animation-delay: 0.15s; }
+  .product-card:nth-child(4) { animation-delay: 0.2s; }
+  .product-card:nth-child(5) { animation-delay: 0.25s; }
+  .product-card:nth-child(6) { animation-delay: 0.3s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+  .product-img {
+    aspect-ratio: 3/4; position: relative; overflow: hidden;
+    margin-bottom: 16px; background: var(--blush);
+  }
+  .product-img-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 72px; transition: transform 0.5s ease;
+  }
+  .product-card:hover .product-img-inner { transform: scale(1.06); }
+  .product-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--rose); color: white;
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 9px;
+  }
+  .product-badge.sale { background: var(--mauve); }
+  .product-badge.new { background: var(--deep); }
+  .product-actions {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: flex;
+    transform: translateY(100%); transition: transform 0.4s ease;
+  }
+  .product-card:hover .product-actions { transform: translateY(0); }
+  .action-btn {
+    flex: 1; padding: 13px;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    border: none; cursor: none;
+    transition: background 0.3s;
+  }
+  .action-cart { background: var(--deep); color: white; }
+  .action-cart:hover { background: var(--rose); }
+  .action-wish { background: white; color: var(--deep); max-width: 48px; font-size: 16px; }
+  .action-wish:hover { background: var(--blush); }
+  .product-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; margin-bottom: 4px; }
+  .product-category { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--rose); margin-bottom: 8px; }
+  .product-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .product-price { font-size: 16px; font-weight: 300; }
+  .product-old { font-size: 12px; color: #bbb; text-decoration: line-through; margin-left: 6px; }
+  .product-rating { font-size: 11px; color: var(--gold); }
+
+  /* Pagination */
+  .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 60px; }
+  .page-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--champagne);
+    font-size: 13px; letter-spacing: 1px;
+    cursor: none; text-decoration: none; color: var(--deep);
+    transition: all 0.3s;
+  }
+  .page-btn:hover, .page-btn.active { background: var(--rose); color: white; border-color: var(--rose); }
+
+  footer { background: var(--deep); color: var(--champagne); padding: 40px 60px; text-align: center; }
+  .footer-bottom-text { font-size: 10px; letter-spacing: 2px; color: #5a4030; }
+  .footer-nav { display: flex; justify-content: center; gap: 40px; margin-bottom: 24px; }
+  .footer-nav a { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #8a7060; text-decoration: none; transition: color 0.3s; }
+  .footer-nav a:hover { color: var(--champagne); }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">YEMI·VELORA·<span>LUX</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html" class="active">Shop</a></li>
+    <li><a href="product.html">Collections</a></li>
+    <li><a href="index.html#ritual">Ritual</a></li>
+    <li><a href="index.html#newsletter">Contact</a></li>
+  </ul>
+  <a href="cart.html" class="nav-cart">Bag (0)</a>
+</nav>
+
+<!-- Shop Hero -->
+<div class="shop-hero">
+  <div>
+    <h1 class="shop-hero-title">All<br><em>Products</em></h1>
+  </div>
+  <div class="shop-hero-right">
+    <div class="shop-count">170 Products</div>
+    <div class="shop-sort">
+      Sort by:
+      <select class="sort-select">
+        <option>Featured</option>
+        <option>Price: Low to High</option>
+        <option>Price: High to Low</option>
+        <option>Newest First</option>
+        <option>Best Rated</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="shop-layout">
+  <!-- Sidebar Filters -->
+  <aside class="sidebar">
+    <div class="filter-section">
+      <div class="filter-title">Category</div>
+      <div class="filter-options">
+        <label class="filter-option"><input type="checkbox" checked><label>All Products</label><span>170</span></label>
+        <label class="filter-option"><input type="checkbox"><label>Skincare</label><span>48</span></label>
+        <label class="filter-option"><input type="checkbox"><label>Makeup</label><span>64</span></label>
+        <label class="filter-option"><input type="checkbox"><label>Fragrance</label><span>22</span></label>
+        <label class="filter-option"><input type="checkbox"><label>Body Care</label><span>36</span></label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Price Range</div>
+      <div class="price-range-display"><span>₦0</span><span>₦100,000</span></div>
+      <input type="range" class="price-slider" min="0" max="100000" value="100000">
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Shade</div>
+      <div class="color-swatches">
+        <div class="swatch nudes active" title="Nudes"></div>
+        <div class="swatch reds" title="Reds"></div>
+        <div class="swatch pinks" title="Pinks"></div>
+        <div class="swatch berries" title="Berries"></div>
+        <div class="swatch neutrals" title="Neutrals"></div>
+        <div class="swatch corals" title="Corals"></div>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Skin Type</div>
+      <div class="filter-options">
+        <label class="filter-option"><input type="checkbox"><label>All Skin Types</label></label>
+        <label class="filter-option"><input type="checkbox"><label>Oily Skin</label></label>
+        <label class="filter-option"><input type="checkbox"><label>Dry Skin</label></label>
+        <label class="filter-option"><input type="checkbox"><label>Combination</label></label>
+        <label class="filter-option"><input type="checkbox"><label>Sensitive</label></label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Concern</div>
+      <div class="filter-options">
+        <label class="filter-option"><input type="checkbox"><label>Anti-Aging</label></label>
+        <label class="filter-option"><input type="checkbox"><label>Brightening</label></label>
+        <label class="filter-option"><input type="checkbox"><label>Hydration</label></label>
+        <label class="filter-option"><input type="checkbox"><label>Acne & Blemishes</label></label>
+        <label class="filter-option"><input type="checkbox"><label>Dark Spots</label></label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Rating</div>
+      <div class="filter-options">
+        <label class="filter-option"><input type="radio" name="rating"><label>⭐⭐⭐⭐⭐ 5 Stars</label></label>
+        <label class="filter-option"><input type="radio" name="rating"><label>⭐⭐⭐⭐ 4+ Stars</label></label>
+        <label class="filter-option"><input type="radio" name="rating"><label>⭐⭐⭐ 3+ Stars</label></label>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Products Grid -->
+  <main class="products-area">
+    <div class="active-filters">
+      <div class="filter-chip">Skincare <span class="chip-x">×</span></div>
+      <div class="filter-chip">Under ₦50,000 <span class="chip-x">×</span></div>
+      <div class="filter-chip">5 Stars <span class="chip-x">×</span></div>
+    </div>
+
+    <div class="products-grid">
+      <!-- Product 1 -->
+      <a href="product.html" class="product-card">
+        <div class="product-img">
+          <div class="product-img-inner">🌹</div>
+          <div class="product-badge">Best Seller</div>
+          <div class="product-actions">
+            <button class="action-btn action-cart">Add to Bag</button>
+            <button class="action-btn action-wish">♡</button>
+          </div>
+        </div>
+        <div class="product-category">Skincare · Serum</div>
+        <div class="product-name">Rose Elixir Serum</div>
+        <div class="product-bottom">
+          <div><span class="product-price">₦24,500</span></div>
+          <div class="product-rating">★★★★★ (142)</div>
+        </div>
+      </a>
+      <!-- Product 2 -->
+      <a href="product.html" class="product-card">
+        <div class="product-img">
+          <div class="product-img-inner">✨</div>
+          <div class="product-badge new">New In</div>
+          <div class="product-actions">
+            <button class="action-btn action-cart">Add to Bag</button>
+            <button class="action-btn action-wish">♡</button>
+          </div>
+        </div>
+        <div class="product-category">Makeup · Highlighter</div>
+        <div class="product-name">Velvet Glow Kit</div>
+        <div class="product-bottom">
+          <div><span class="product-price">₦38,000</span><span class="product-old">₦45,000</span></div>
+          <div class="product-rating">★★★★☆ (87)</div>
+        </div>
+      </a>
+      <!-- Product 3 -->
+      <a href="product.html" class="product-card">
+        <div class="product-img">
+          <div class="product-img-inner">💋</div>
+          <div class="product-actions">
+            <button class="action-btn action-cart">Add to Bag</button>
+            <button class="action-btn action-wish">♡</button>
+          </div>
+        </div>
+        <div class="product-category">Makeup · Lip</div>
+        <div class="product-name">Satin Lip Luxe</div>
+        <div class="product-bottom">
+          <div><span class="product-price">₦12,800</span></div>
+          <div class="product-rating">★★★★★ (209)</div>
+        </div>
+      </a>
+      <!-- Product 4 -->
+      <a href="product.html" class="product-card">
+        <div class="product-img">
+          <div class="product-img-inner">🌿</div>
+          <div class="product-badge">Organic</div>
+          <div class="product-actions">
+            <button class="action-btn action-cart">Add to Bag</button>
+            <button class="action-btn action-wish">♡</button>
+          </div>
+        </div>
+        <div class="product-category">Skincare · Mask</div>
+        <div class="product-name">Green Detox Mask</div>
+        <div class="product-bottom">
+          <div><span class="product-price">₦18,200</span></div>
+          <div class="product-rating">★★★★★ (95)</div>
+        </div>
+      </a>
+      <!-- Product 5 -->
+      <a href="product.html" class="product-card">
+        <div class="product-img">
+          <div class="product-img-inner">🌺</div>
+          <div class="product-actions">
+            <button class="action-btn action-cart">Add to Bag</button>
+            <button class="action-btn action-wish">♡</button>
+          </div>
+        </div>
+        <div class="product-category">Skincare · Toner</div>
+        <div class="product-name">Hibiscus Toning Mist</div>
+        <div class="product-bottom">
+          <div><span class="product-price">₦9,500</span></div>
+          <div class="product-rating">★★★★☆ (63)</div>
+        </div>
+      </a>
+      <!-- Product 6 -->
+      <a href="product.html" class="product-card">
+        <div class="product-img">
+          <div class="product-img-inner">🕯️</div>
+          <div class="product-badge sale">Limited</div>
+          <div class="product-actions">
+            <button class="action-btn action-cart">Add to Bag</button>
+            <button class="action-btn action-wish">♡</button>
+          </div>
+        </div>
+        <div class="product-category">Fragrance · EDP</div>
+        <div class="product-name">Velora Noir Parfum</div>
+        <div class="product-bottom">
+          <div><span class="product-price">₦56,000</span></div>
+          <div class="product-rating">★★★★★ (178)</div>
+        </div>
+      </a>
+      <!-- Product 7 -->
+      <a href="product.html" class="product-card">
+        <div class="product-img">
+          <div class="product-img-inner">🍯</div>
+          <div class="product-actions">
+            <button class="action-btn action-cart">Add to Bag</button>
+            <button class="action-btn action-wish">♡</button>
+          </div>
+        </div>
+        <div class="product-category">Skincare · Moisturiser</div>
+        <div class="product-name">Honey & Gold Cream</div>
+        <div class="product-bottom">
+          <div><span class="product-price">₦21,000</span></div>
+          <div class="product-rating">★★★★★ (54)</div>
+        </div>
+      </a>
+      <!-- Product 8 -->
+      <a href="product.html" class="product-card">
+        <div class="product-img">
+          <div class="product-img-inner">💫</div>
+          <div class="product-badge new">New In</div>
+          <div class="product-actions">
+            <button class="action-btn action-cart">Add to Bag</button>
+            <button class="action-btn action-wish">♡</button>
+          </div>
+        </div>
+        <div class="product-category">Makeup · Foundation</div>
+        <div class="product-name">Velvet Skin Foundation</div>
+        <div class="product-bottom">
+          <div><span class="product-price">₦28,500</span><span class="product-old">₦32,000</span></div>
+          <div class="product-rating">★★★★☆ (41)</div>
+        </div>
+      </a>
+      <!-- Product 9 -->
+      <a href="product.html" class="product-card">
+        <div class="product-img">
+          <div class="product-img-inner">🫧</div>
+          <div class="product-actions">
+            <button class="action-btn action-cart">Add to Bag</button>
+            <button class="action-btn action-wish">♡</button>
+          </div>
+        </div>
+        <div class="product-category">Skincare · Cleanser</div>
+    

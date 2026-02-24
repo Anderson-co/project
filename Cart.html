@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Bag — Temi·Velora·Lux</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+<style>
+  :root { --rose:#c9847a; --gold:#c4a882; --cream:#fdf6f0; --blush:#f5e8e0; --deep:#1a0f0a; --mauve:#9b6e73; --champagne:#e8d5c4; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Josefin Sans', sans-serif; background: var(--cream); color: var(--deep); cursor: none; }
+  .cursor { width: 12px; height: 12px; background: var(--rose); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
+  .cursor-ring { width: 36px; height: 36px; border: 1px solid var(--rose); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.5s; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 24px 60px; background: rgba(253,246,240,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(196,168,130,0.2); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; letter-spacing: 4px; color: var(--deep); text-decoration: none; }
+  .nav-logo span { color: var(--rose); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--deep); text-decoration: none; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--rose); }
+  .nav-cart { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; background: var(--rose); color: white; padding: 10px 24px; text-decoration: none; }
+
+  .cart-page { padding: 120px 60px 80px; display: grid; grid-template-columns: 1fr 380px; gap: 60px; min-height: 80vh; }
+  .cart-header { margin-bottom: 40px; }
+  .cart-title { font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 300; }
+  .cart-title em { font-style: italic; color: var(--rose); }
+  .cart-count { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--mauve); margin-top: 8px; }
+
+  .cart-items { display: flex; flex-direction: column; gap: 0; }
+  .cart-item {
+    display: grid; grid-template-columns: 100px 1fr auto;
+    gap: 24px; padding: 28px 0;
+    border-bottom: 1px solid rgba(196,168,130,0.25);
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+  .cart-item:nth-child(2) { animation-delay: 0.1s; }
+  .cart-item:nth-child(3) { animation-delay: 0.2s; }
+  .item-img { background: var(--blush); display: flex; align-items: center; justify-content: center; font-size: 40px; aspect-ratio: 1; }
+  .item-info {}
+  .item-brand { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--rose); margin-bottom: 6px; }
+  .item-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; margin-bottom: 8px; }
+  .item-specs { font-size: 11px; letter-spacing: 1px; color: var(--mauve); margin-bottom: 16px; }
+  .item-qty { display: flex; align-items: center; gap: 0; }
+  .iq-btn { width: 36px; height: 36px; border: 1px solid var(--champagne); background: none; font-size: 16px; cursor: none; transition: background 0.2s; }
+  .iq-btn:hover { background: var(--blush); }
+  .iq-num { width: 40px; text-align: center; font-size: 13px; letter-spacing: 2px; border-top: 1px solid var(--champagne); border-bottom: 1px solid var(--champagne); height: 36px; line-height: 36px; }
+  .item-right { text-align: right; display: flex; flex-direction: column; justify-content: space-between; }
+  .item-price { font-family: 'Cormorant Garamond', serif; font-size: 24px; }
+  .item-remove { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--mauve); cursor: none; background: none; border: none; text-decoration: underline; transition: color 0.3s; }
+  .item-remove:hover { color: var(--rose); }
+
+  /* Order Summary */
+  .order-summary { background: var(--blush); padding: 36px; height: fit-content; position: sticky; top: 100px; }
+  .summary-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; margin-bottom: 28px; }
+  .summary-rows { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+  .summary-row { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 1px; }
+  .summary-row.total { font-size: 16px; font-weight: 400; padding-top: 16px; border-top: 1px solid rgba(196,168,130,0.4); }
+  .summary-row span:last-child { font-family: 'Cormorant Garamond', serif; font-size: 18px; }
+
+  /* Promo */
+  .promo-input { display: flex; gap: 0; margin-bottom: 24px; }
+  .promo-field {
+    flex: 1; padding: 13px 16px;
+    border: 1px solid rgba(196,168,130,0.4); border-right: none;
+    background: white; font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px; letter-spacing: 2px; outline: none;
+  }
+  .promo-field::placeholder { color: #bbb; }
+  .promo-apply {
+    padding: 13px 20px;
+    background: var(--deep); color: white;
+    border: none; font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    cursor: none;
+  }
+  .checkout-btn {
+    width: 100%; padding: 18px;
+    background: var(--rose); color: white;
+    border: none; font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    cursor: none; transition: background 0.3s;
+    margin-bottom: 12px;
+  }
+  .checkout-btn:hover { background: var(--mauve); }
+  .continue-btn {
+    display: block; text-align: center; text-decoration: none;
+    color: var(--deep);
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    border-bottom: 1px solid var(--deep);
+    padding-bottom: 2px; margin: 0 auto;
+    width: fit-content;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .continue-btn:hover { color: var(--rose); border-color: var(--rose); }
+
+  .trust-row { display: flex; gap: 12px; margin-top: 24px; }
+  .trust-item { display: flex; align-items: center; gap: 8px; flex: 1; }
+  .trust-icon { font-size: 16px; }
+  .trust-text { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--mauve); line-height: 1.4; }
+
+  footer { background: var(--deep); color: var(--champagne); padding: 40px 60px; text-align: center; }
+  .footer-nav { display: flex; justify-content: center; gap: 40px; margin-bottom: 24px; }
+  .footer-nav a { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #8a7060; text-decoration: none; }
+  .footer-copy { font-size: 10px; letter-spacing: 2px; color: #5a4030; }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">YEMI·VELORA·<span>LUX</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="product.html">Collections</a></li>
+    <li><a href="index.html#newsletter">Contact</a></li>
+  </ul>
+  <a href="cart.html" class="nav-cart">Bag (3)</a>
+</nav>
+
+<div class="cart-page">
+  <div>
+    <div class="cart-header">
+      <h1 class="cart-title">Your <em>Bag</em></h1>
+      <div class="cart-count">3 Items</div>
+    </div>
+
+    <div class="cart-items">
+      <div class="cart-item">
+        <div class="item-img">🌹</div>
+        <div class="item-info">
+          <div class="item-brand">Skincare · Serum</div>
+          <div class="item-name">Rose Elixir Serum</div>
+          <div class="item-specs">30ml · Rosé Bloom</div>
+          <div class="item-qty">
+            <button class="iq-btn">−</button>
+            <div class="iq-num">1</div>
+            <button class="iq-btn">+</button>
+          </div>
+        </div>
+        <div class="item-right">
+          <div class="item-price">₦24,500</div>
+          <button class="item-remove">Remove</button>
+        </div>
+      </div>
+
+      <div class="cart-item">
+        <div class="item-img">✨</div>
+        <div class="item-info">
+          <div class="item-brand">Makeup · Highlighter</div>
+          <div class="item-name">Velvet Glow Kit</div>
+          <div class="item-specs">Set of 4 · Warm Palette</div>
+          <div class="item-qty">
+            <button class="iq-btn">−</button>
+            <div class="iq-num">1</div>
+            <button class="iq-btn">+</button>
+          </div>
+        </div>
+        <div class="item-right">
+          <div class="item-price">₦38,000</div>
+          <button class="item-remove">Remove</button>
+        </div>
+      </div>
+
+      <div class="cart-item">
+        <div class="item-img">💋</div>
+        <div class="item-info">
+          <div class="item-brand">Makeup · Lip</div>
+          <div class="item-name">Satin Lip Luxe</div>
+          <div class="item-specs">Berry Crush Shade</div>
+          <div class="item-qty">
+            <button class="iq-btn">−</button>
+            <div class="iq-num">2</div>
+            <button class="iq-btn">+</button>
+          </div>
+        </div>
+        <div class="item-right">
+          <div class="item-price">₦25,600</div>
+          <button class="item-remove">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Summary -->
+  <div class="order-summary">
+    <div class="summary-title">Order Summary</div>
+    <div class="promo-input">
+      <input type="text" class="promo-field" placeholder="Promo code...">
+      <button class="promo-apply">Apply</button>
+    </div>
+    <div class="summary-rows">
+      <div class="summary-row"><span>Subtotal (4 items)</span><span>₦88,100</span></div>
+      <div class="summary-row"><span>Promo Discount</span><span style="color:var(--rose)">−₦8,810</span></div>
+      <div class="summary-row"><span>Delivery</span><span>Free ✦</span></div>
+      <div class="summary-row total"><span>Total</span><span>₦79,290</span></div>
+    </div>
+    <button class="checkout-btn">Proceed to Checkout</button>
+    <a href="shop.html" class="continue-btn">Continue Shopping</a>
+    <div class="trust-row">
+      <div class="trust-item">
+        <div class="trust-icon">🔒</div>
+        <div class="trust-text">Secure Checkout</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🔄</div>
+        <div class="trust-text">Easy Returns</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">✈️</div>
+        <div class="trust-text">Fast Delivery</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <nav class="footer-nav">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+  <div class="footer-copy">© 2024 Temi·Velora·Lux. All rights reserved.</div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+</script>
+</body>
+</html>

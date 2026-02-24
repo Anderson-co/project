@@ -1,502 +1,597 @@
 <!DOCTYPE html>
-<!--
-  ============================================================
-  CSC 405 PROJECT - Premier League Top 6 Table
-  Author: CSC 405 Student
-  Description: A styled HTML page featuring:
-    - A 6-column, 2-row Premier League table
-    - Blurred background effect
-    - Centered layout using CSS margin
-    - Social media links (YouTube, Facebook, Twitter)
-  ============================================================
--->
 <html lang="en">
-
 <head>
-  <!-- Page title shown on browser tab -->
-  <title>CSC 405 Project</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temi·Velora·Lux — Beauty Elevated</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #c9847a;
+    --gold: #c4a882;
+    --cream: #fdf6f0;
+    --blush: #f5e8e0;
+    --deep: #1a0f0a;
+    --mauve: #9b6e73;
+    --champagne: #e8d5c4;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Josefin Sans', sans-serif;
+    background: var(--cream);
+    color: var(--deep);
+    cursor: none;
+    overflow-x: hidden;
+  }
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--rose);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.2s, background 0.2s;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--rose);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.5s ease, width 0.3s, height 0.3s;
+    transform: translate(-50%, -50%);
+  }
 
-  <!-- Tells the browser to use modern character encoding -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9000;
+    opacity: 0.4;
+  }
 
-  <!-- Google Fonts: Bebas Neue for headings, Barlow for body -->
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600&display=swap" rel="stylesheet" />
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 60px;
+    background: rgba(253, 246, 240, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(196, 168, 130, 0.2);
+    transition: padding 0.4s;
+  }
+  nav.scrolled { padding: 14px 60px; }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: var(--deep);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--rose); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--deep); text-decoration: none;
+    position: relative; padding-bottom: 4px;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 1px; background: var(--rose);
+    transition: width 0.4s ease;
+  }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-links a:hover { color: var(--rose); }
+  .nav-cart {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--deep); text-decoration: none;
+    background: var(--rose); color: white;
+    padding: 10px 24px;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .nav-cart:hover { background: var(--mauve); transform: translateY(-1px); }
 
-  <!-- Font Awesome for social media icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 140px 60px 80px;
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-size: 10px; letter-spacing: 6px; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 24px;
+    animation: fadeUp 1s 0.3s both;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(60px, 7vw, 100px);
+    font-weight: 300;
+    line-height: 0.95;
+    margin-bottom: 32px;
+    animation: fadeUp 1s 0.5s both;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--rose);
+    display: block;
+  }
+  .hero-subtitle {
+    font-size: 13px; letter-spacing: 2px;
+    color: #7a6355;
+    max-width: 380px;
+    line-height: 2;
+    margin-bottom: 48px;
+    animation: fadeUp 1s 0.7s both;
+  }
+  .hero-ctas {
+    display: flex; gap: 20px; align-items: center;
+    animation: fadeUp 1s 0.9s both;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--deep);
+    color: var(--cream);
+    padding: 16px 40px;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.4s;
+  }
+  .btn-primary:hover { background: var(--rose); transform: translateY(-2px); }
+  .btn-ghost {
+    display: inline-block;
+    color: var(--deep);
+    padding: 16px 0;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    text-decoration: none; border-bottom: 1px solid var(--deep);
+    transition: all 0.4s;
+  }
+  .btn-ghost:hover { color: var(--rose); border-color: var(--rose); }
 
-  <style>
-    /* ======================================================
-       CSS RESET & ROOT VARIABLES
-       - Removes default browser spacing
-       - Defines a consistent color palette using variables
-    ====================================================== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  .hero-right {
+    position: relative;
+    background: var(--blush);
+    overflow: hidden;
+  }
+  .hero-img-container {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-visual {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #f5e8e0 0%, #e8d5c4 40%, #d4b5a8 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Decorative blobs */
+  .blob {
+    position: absolute;
+    border-radius: 60% 40% 70% 30% / 40% 60% 30% 70%;
+    opacity: 0.4;
+    animation: morph 8s infinite;
+  }
+  .blob-1 { width: 400px; height: 400px; background: var(--rose); top: 10%; left: 10%; animation-delay: 0s; }
+  .blob-2 { width: 300px; height: 300px; background: var(--gold); top: 40%; left: 40%; animation-delay: -4s; }
+  .blob-3 { width: 200px; height: 200px; background: var(--mauve); top: 60%; left: 20%; animation-delay: -2s; }
+  @keyframes morph {
+    0%, 100% { border-radius: 60% 40% 70% 30% / 40% 60% 30% 70%; transform: rotate(0deg) scale(1); }
+    33% { border-radius: 30% 60% 40% 70% / 60% 30% 70% 40%; transform: rotate(120deg) scale(1.05); }
+    66% { border-radius: 50% 50% 30% 70% / 30% 70% 50% 50%; transform: rotate(240deg) scale(0.95); }
+  }
+  .hero-product-mockup {
+    position: absolute;
+    width: 260px; height: 380px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.9), rgba(255,240,235,0.7));
+    border-radius: 8px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-3deg);
+    box-shadow: 20px 40px 80px rgba(26,15,10,0.2);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.6);
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(-50%, -50%) rotate(-3deg) translateY(0); }
+    50% { transform: translate(-50%, -50%) rotate(-3deg) translateY(-15px); }
+  }
+  .mockup-icon {
+    font-size: 64px; margin-bottom: 16px;
+  }
+  .mockup-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; letter-spacing: 4px;
+    color: var(--deep); text-align: center;
+  }
+  .mockup-sub {
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--rose); margin-top: 6px;
+  }
+  .hero-float-tag {
+    position: absolute;
+    background: white;
+    padding: 14px 20px;
+    box-shadow: 0 8px 30px rgba(26,15,10,0.12);
+    animation: floatSide 5s ease-in-out infinite;
+  }
+  .hero-float-tag:nth-child(2) { top: 20%; right: 8%; animation-delay: -2s; }
+  .hero-float-tag:nth-child(3) { bottom: 20%; left: 8%; animation-delay: -3s; }
+  @keyframes floatSide {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .tag-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--rose); }
+  .tag-value { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; }
 
-    :root {
-      --green:   #00ff87;
-      --dark:    #0b0f1a;
-      --card-bg: rgba(10, 16, 35, 0.72);
-      --border:  rgba(0, 255, 135, 0.25);
-      --text:    #e8eaf6;
-      --muted:   #7986cb;
-    }
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 40px; left: 60px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: #9b6e73;
+    animation: fadeUp 1s 1.2s both;
+  }
+  .scroll-line {
+    width: 40px; height: 1px; background: var(--rose);
+    animation: expandLine 2s 1.5s ease both;
+  }
+  @keyframes expandLine { from { width: 0; } to { width: 40px; } }
 
-    /* ======================================================
-       BODY & BACKGROUND
-       - Sets full-page background image
-       - background-attachment: fixed keeps the image still
-         while content scrolls (parallax-lite effect)
-       - The blur effect is applied via a pseudo-element
-         so it doesn't blur the content itself
-    ====================================================== */
-    body {
-      font-family: 'Barlow', sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-      /* Center all block-level children automatically */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+  /* ===== MARQUEE ===== */
+  .marquee-wrapper {
+    background: var(--deep);
+    padding: 18px 0;
+    overflow: hidden;
+    display: flex;
+  }
+  .marquee-track {
+    display: flex; gap: 60px;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-item {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--champagne); display: flex; align-items: center; gap: 20px;
+  }
+  .marquee-dot { width: 4px; height: 4px; background: var(--rose); border-radius: 50%; }
 
-    /* The blurred background image sits BEHIND all content */
-    body::before {
-      content: "";
-      position: fixed;            /* stays in place on scroll */
-      inset: 0;                   /* covers the entire viewport */
-      background-image: url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1600');
-      background-size: cover;
-      background-position: center;
+  /* ===== SECTION GLOBAL ===== */
+  section { padding: 100px 60px; }
+  .section-eyebrow {
+    font-size: 10px; letter-spacing: 6px; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .section-title em { font-style: italic; color: var(--rose); }
 
-      /* ➤ This is the BLUR effect requirement (ii) */
-      filter: blur(6px) brightness(0.35);
+  /* ===== CATEGORIES ===== */
+  .categories { background: var(--blush); }
+  .categories-header { text-align: center; margin-bottom: 60px; }
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .cat-card {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    cursor: none;
+    text-decoration: none;
+  }
+  .cat-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.6s ease;
+  }
+  .cat-card:hover .cat-bg { transform: scale(1.06); }
+  .cat-card:nth-child(1) .cat-bg { background: linear-gradient(160deg, #f7e4dc, #e8c4b8); }
+  .cat-card:nth-child(2) .cat-bg { background: linear-gradient(160deg, #e8d8c8, #d4b896); }
+  .cat-card:nth-child(3) .cat-bg { background: linear-gradient(160deg, #e0d4e8, #c4b0d0); }
+  .cat-card:nth-child(4) .cat-bg { background: linear-gradient(160deg, #d8e8e0, #b0ccbc); }
+  .cat-emoji {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    font-size: 72px;
+    transition: transform 0.4s;
+  }
+  .cat-card:hover .cat-emoji { transform: translate(-50%, -65%) scale(1.1); }
+  .cat-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 24px;
+    background: linear-gradient(transparent, rgba(26,15,10,0.6));
+  }
+  .cat-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400;
+    color: white; display: block;
+  }
+  .cat-count {
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
 
-      z-index: -1;                /* push it behind everything */
-    }
+  /* ===== FEATURED PRODUCTS ===== */
+  .featured { background: var(--cream); }
+  .featured-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px;
+  }
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .product-card {
+    position: relative;
+    cursor: none;
+    text-decoration: none;
+    color: var(--deep);
+    display: block;
+  }
+  .product-img {
+    aspect-ratio: 3/4;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: var(--blush);
+  }
+  .product-img-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.5s ease;
+  }
+  .product-card:hover .product-img-inner { transform: scale(1.04); }
+  .product-emoji { font-size: 80px; }
+  .product-tag {
+    position: absolute; top: 16px; left: 16px;
+    background: var(--rose); color: white;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 5px 10px;
+  }
+  .product-wishlist {
+    position: absolute; top: 16px; right: 16px;
+    width: 36px; height: 36px;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    cursor: none;
+  }
+  .product-card:hover .product-wishlist { opacity: 1; }
+  .product-add {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: var(--deep);
+    color: white;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    padding: 14px;
+    text-align: center;
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+  }
+  .product-card:hover .product-add { transform: translateY(0); }
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; margin-bottom: 6px;
+  }
+  .product-variant { font-size: 11px; letter-spacing: 1px; color: #9b6e73; margin-bottom: 10px; }
+  .product-footer { display: flex; justify-content: space-between; align-items: center; }
+  .product-price { font-size: 16px; font-weight: 300; letter-spacing: 1px; }
+  .product-old { font-size: 13px; color: #bbb; text-decoration: line-through; margin-left: 8px; }
+  .product-stars { color: var(--gold); font-size: 12px; }
 
-    /* ======================================================
-       PAGE WRAPPER
-       - max-width + margin: auto centers the content block
-         (Requirement iii — aligning at center with CSS margin)
-    ====================================================== */
-    .wrapper {
-      width: 92%;
-      max-width: 1100px;
+  /* ===== BANNER ===== */
+  .banner {
+    background: var(--deep);
+    color: var(--cream);
+    padding: 100px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .banner-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(44px, 5vw, 72px);
+    font-weight: 300;
+    line-height: 1.1;
+  }
+  .banner-title em { font-style: italic; color: var(--gold); }
+  .banner-right { display: flex; flex-direction: column; gap: 32px; }
+  .banner-stat { border-left: 2px solid var(--rose); padding-left: 24px; }
+  .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 48px; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #8a7060; margin-top: 6px; }
 
-      /* ➤ margin: auto is the CSS trick that horizontally
-         centers a block element inside its parent */
-      margin: 0 auto;
+  /* ===== RITUAL SECTION ===== */
+  .ritual {
+    background: var(--blush);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 0;
+  }
+  .ritual-visual {
+    background: linear-gradient(135deg, #e8c8c0, #c4a8a0);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 500px;
+    position: relative; overflow: hidden;
+  }
+  .ritual-emoji-big { font-size: 140px; animation: float 8s ease-in-out infinite; }
+  .ritual-content {
+    padding: 100px 60px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .ritual-steps { display: flex; flex-direction: column; gap: 32px; margin-top: 40px; }
+  .ritual-step { display: flex; gap: 24px; align-items: flex-start; }
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 300;
+    color: var(--rose); opacity: 0.4;
+    line-height: 1; flex-shrink: 0;
+  }
+  .step-content {}
+  .step-title { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .step-desc { font-size: 12px; letter-spacing: 1px; color: #7a6355; line-height: 2; }
 
-      padding: 40px 0 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-    }
+  /* ===== NEWSLETTER ===== */
+  .newsletter {
+    background: linear-gradient(135deg, var(--rose), var(--mauve));
+    padding: 80px 60px;
+    text-align: center;
+    color: white;
+  }
+  .newsletter-eyebrow { font-size: 10px; letter-spacing: 6px; text-transform: uppercase; opacity: 0.8; margin-bottom: 16px; }
+  .newsletter-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px; font-weight: 300;
+    margin-bottom: 40px;
+  }
+  .newsletter-form { display: flex; max-width: 480px; margin: 0 auto; }
+  .newsletter-input {
+    flex: 1;
+    padding: 16px 24px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px; letter-spacing: 2px;
+    border: none; background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: white;
+    outline: none;
+  }
+  .newsletter-input::placeholder { color: rgba(255,255,255,0.6); }
+  .newsletter-btn {
+    padding: 16px 32px;
+    background: white; color: var(--rose);
+    border: none;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s;
+  }
+  .newsletter-btn:hover { background: var(--cream); }
 
-    /* ======================================================
-       HEADER SECTION
-       - Large decorative heading "CSC 405" (Requirement: head)
-       - Subtitle / tagline below
-    ====================================================== */
-    header {
-      text-align: center;
-    }
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--deep);
+    color: var(--champagne);
+    padding: 80px 60px 40px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+  .footer-brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300; letter-spacing: 4px;
+    margin-bottom: 16px;
+  }
+  .footer-brand-name span { color: var(--rose); }
+  .footer-tagline { font-size: 11px; letter-spacing: 2px; color: #8a7060; line-height: 2; margin-bottom: 24px; }
+  .footer-socials { display: flex; gap: 16px; }
+  .social-icon {
+    width: 36px; height: 36px;
+    border: 1px solid #3a2520;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; text-decoration: none;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .social-icon:hover { border-color: var(--rose); background: var(--rose); }
+  .footer-col-title {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 24px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a {
+    font-size: 12px; letter-spacing: 1px; color: #8a7060;
+    text-decoration: none; transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--champagne); }
+  .footer-bottom {
+    border-top: 1px solid #2a1a15;
+    padding-top: 32px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-copy { font-size: 10px; letter-spacing: 2px; color: #5a4030; }
 
-    /* Decorative top label */
-    header .eyebrow {
-      font-size: 0.8rem;
-      letter-spacing: 6px;
-      text-transform: uppercase;
-      color: var(--green);
-      margin-bottom: 12px;
-    }
-
-    /* Main heading — Requirement: head = "CSC 405" */
-    header h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(4rem, 12vw, 9rem);  /* scales with screen size */
-      line-height: 0.9;
-      letter-spacing: 4px;
-      color: #fff;
-
-      /* Green glow text-shadow for visual punch */
-      text-shadow:
-        0 0 30px rgba(0,255,135,0.5),
-        0 0 80px rgba(0,255,135,0.2);
-    }
-
-    header p {
-      margin-top: 16px;
-      font-size: 1rem;
-      color: var(--muted);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    /* ======================================================
-       CARD CONTAINER
-       - Glassmorphism card that wraps the table
-       - backdrop-filter applies blur to whatever is BEHIND
-         the card element (secondary blur layer)
-    ====================================================== */
-    .card {
-      width: 100%;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-
-      /* Frosted glass effect using backdrop-filter */
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-
-      box-shadow: 0 8px 60px rgba(0,0,0,0.5);
-    }
-
-    .card-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.6rem;
-      letter-spacing: 3px;
-      color: var(--green);
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
-    }
-
-    /* ======================================================
-       TABLE STYLES
-       Requirement (i):
-         - 6 columns: Rank, Club, W, D, L, Points
-         - 2 data rows (rows for the 6 clubs are achieved by
-           having ONE header row + SIX data rows, but the
-           question specifically says "6 columns and 2 rows"
-           which is interpreted as header row + data rows
-           showing the top 6 clubs)
-         NOTE: To strictly match "6 columns, 2 rows" the table
-         has a header row and one summary row — however, a
-         more useful and readable interpretation is 6 columns
-         with one header row plus six data rows. Adjust if
-         your instructor specifically means otherwise.
-    ====================================================== */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-    }
-
-    /* Table Header Row */
-    thead tr {
-      background: rgba(0, 255, 135, 0.1);
-    }
-
-    th {
-      padding: 14px 16px;
-      text-align: left;
-      font-size: 0.7rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--green);
-      border-bottom: 2px solid var(--border);
-    }
-
-    /* Data rows */
-    tbody tr {
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      transition: background 0.2s ease;   /* smooth hover highlight */
-    }
-
-    tbody tr:hover {
-      background: rgba(0, 255, 135, 0.06);
-    }
-
-    td {
-      padding: 16px 16px;
-      vertical-align: middle;
-    }
-
-    /* Rank number badge */
-    .rank {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.5rem;
-      color: var(--muted);
-      width: 50px;
-    }
-
-    /* Highlight rank 1 in gold */
-    tbody tr:first-child .rank { color: #ffd700; }
-    tbody tr:nth-child(2) .rank { color: #c0c0c0; }
-    tbody tr:nth-child(3) .rank { color: #cd7f32; }
-
-    /* Club name cell */
-    .club-name {
-      font-weight: 600;
-      font-size: 1rem;
-      color: #fff;
-    }
-
-    /* Points column — biggest and brightest */
-    .points {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.6rem;
-      color: var(--green);
-      text-align: right;
-      padding-right: 8px;
-    }
-
-    /* ======================================================
-       SOCIAL MEDIA LINKS SECTION
-       Requirement (iv): Links to YouTube, Facebook, Twitter
-    ====================================================== */
-    .social-section {
-      text-align: center;
-    }
-
-    .social-label {
-      font-size: 0.75rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    /* Each social button */
-    .social-btn {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 28px;
-      border-radius: 50px;
-      text-decoration: none;        /* remove underline */
-      font-weight: 600;
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.06);
-      color: #fff;
-      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
-    }
-
-    .social-btn:hover {
-      transform: translateY(-4px);    /* lifts the button on hover */
-      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
-    }
-
-    /* Platform-specific accent colors on hover */
-    .social-btn.youtube  { --accent: #ff0000; }
-    .social-btn.facebook { --accent: #1877f2; }
-    .social-btn.twitter  { --accent: #1da1f2; }
-
-    .social-btn:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .social-btn i {
-      font-size: 1.2rem;
-    }
-
-    /* ======================================================
-       FOOTER
-    ====================================================== */
-    footer {
-      font-size: 0.75rem;
-      color: var(--muted);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-align: center;
-      padding-bottom: 20px;
-    }
-  </style>
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    section { padding: 60px 24px; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 120px 24px 60px; }
+    .hero-right { height: 400px; }
+    .cat-grid { grid-template-columns: 1fr 1fr; }
+    .product-grid { grid-template-columns: 1fr 1fr; }
+    .banner { grid-template-columns: 1fr; padding: 60px 24px; }
+    .ritual { grid-template-columns: 1fr; }
+    .ritual-content { padding: 60px 24px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
 </head>
-
 <body>
 
-  <!-- ============================================================
-       MAIN CONTENT WRAPPER
-       margin: 0 auto on .wrapper centers the page content
-  ============================================================ -->
-  <div class="wrapper">
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-    <!-- ==================== HEADER ==================== -->
-    <!-- Requirement: Title = "CSC 405 Project", Head = "CSC 405" -->
-    <header>
-      <p class="eyebrow">Computer Science Department</p>
-      <!-- This is the page heading as specified -->
-      <h1>CSC 405</h1>
-      <p>Premier League — Top 6 Standings Table</p>
-    </header>
+<!-- Navigation -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">YEMI·VELORA·<span>LUX</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="product.html">Collections</a></li>
+    <li><a href="#ritual">Ritual</a></li>
+    <li><a href="#newsletter">Contact</a></li>
+  </ul>
+  <a href="cart.html" class="nav-cart">Bag (0)</a>
+</nav>
 
-    <!-- ==================== TABLE CARD ==================== -->
-    <!-- Requirement (i): 6-column table with club names & points -->
-    <div class="card">
-      <div class="card-title">📊 Current Top 6 — Live Standings</div>
-
-      <!--
-        TABLE STRUCTURE:
-        ┌────────────────────────────────────────────────────────┐
-        │ Col 1: Rank  │ Col 2: Club │ Col 3: W │ Col 4: D      │
-        │ Col 5: L     │ Col 6: Points                           │
-        └────────────────────────────────────────────────────────┘
-        Row 1 = <thead> header labels
-        Row 2+ = <tbody> data rows for each club
-      -->
-      <table>
-
-        <!-- TABLE HEADER ROW (Row 1 — Column labels) -->
-        <thead>
-          <tr>
-            <th>#</th>           <!-- Column 1: Rank -->
-            <th>Club</th>        <!-- Column 2: Club Name -->
-            <th>W</th>           <!-- Column 3: Wins -->
-            <th>D</th>           <!-- Column 4: Draws -->
-            <th>L</th>           <!-- Column 5: Losses -->
-            <th style="text-align:right">PTS</th> <!-- Column 6: Points -->
-          </tr>
-        </thead>
-
-        <!-- TABLE DATA ROWS (Row 2 — the 6 top clubs) -->
-        <tbody>
-
-          <!-- Club 1: Arsenal FC — 61 points -->
-          <tr>
-            <td class="rank">1</td>
-            <td class="club-name">⚪🔴 Arsenal FC</td>
-            <td>18</td>
-            <td>7</td>
-            <td>3</td>
-            <td class="points">61</td>
-          </tr>
-
-          <!-- Club 2: Manchester City — 56 points -->
-          <tr>
-            <td class="rank">2</td>
-            <td class="club-name">🔵 Manchester City</td>
-            <td>17</td>
-            <td>5</td>
-            <td>5</td>
-            <td class="points">56</td>
-          </tr>
-
-          <!-- Club 3: Aston Villa — 51 points -->
-          <tr>
-            <td class="rank">3</td>
-            <td class="club-name">🟣 Aston Villa</td>
-            <td>15</td>
-            <td>6</td>
-            <td>6</td>
-            <td class="points">51</td>
-          </tr>
-
-          <!-- Club 4: Manchester United — 48 points -->
-          <tr>
-            <td class="rank">4</td>
-            <td class="club-name">🔴 Manchester United</td>
-            <td>13</td>
-            <td>9</td>
-            <td>5</td>
-            <td class="points">48</td>
-          </tr>
-
-          <!-- Club 5: Chelsea FC — 45 points -->
-          <tr>
-            <td class="rank">5</td>
-            <td class="club-name">🔵 Chelsea FC</td>
-            <td>12</td>
-            <td>9</td>
-            <td>6</td>
-            <td class="points">45</td>
-          </tr>
-
-          <!-- Club 6: Liverpool FC — 45 points -->
-          <tr>
-            <td class="rank">6</td>
-            <td class="club-name">🔴 Liverpool FC</td>
-            <td>13</td>
-            <td>6</td>
-            <td>8</td>
-            <td class="points">45</td>
-          </tr>
-
-        </tbody>
-      </table>
-    </div><!-- /.card -->
-
-    <!-- ==================== SOCIAL LINKS ==================== -->
-    <!--
-      Requirement (iv): Link YouTube, Facebook, and Twitter
-      Each <a> tag has href pointing to the platform's homepage.
-      target="_blank" opens in a new tab (good UX practice).
-      rel="noopener noreferrer" is a security best practice for
-      external links opened in new tabs.
-    -->
-    <div class="social-section">
-      <p class="social-label">Follow Us On</p>
-
-      <div class="social-links">
-
-        <!-- YouTube Link -->
-        <a
-          href="https://www.youtube.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-btn youtube"
-          title="Visit YouTube"
-        >
-          <i class="fab fa-youtube"></i>
-          YouTube
-        </a>
-
-        <!-- Facebook Link -->
-        <a
-          href="https://www.facebook.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-btn facebook"
-          title="Visit Facebook"
-        >
-          <i class="fab fa-facebook-f"></i>
-          Facebook
-        </a>
-
-        <!-- Twitter (X) Link -->
-        <a
-          href="https://www.twitter.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-btn twitter"
-          title="Visit Twitter"
-        >
-          <i class="fab fa-twitter"></i>
-          Twitter
-        </a>
-
-      </div>
-    </div><!-- /.social-section -->
-
-    <!-- ==================== FOOTER ==================== -->
-    <footer>
-      &copy; 2024 CSC 405 Project &mdash; Premier League Data
-    </footer>
-
-  </div><!-- /.wrapper -->
-
-</body>
-</html>
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">✦ New Collection 2024 ✦</p>
+    <h1 class="hero-title">
+      Luxe Beauty<br>
+      <em>Reimagined</em><br>
+      for You
+    </h1>
+    <p class="hero-subtitle">Discover beauty rituals crafted with precision and soul. From skincare sanctuaries to colour alchemy — every product tells your story.</p>
+    <div class="hero-ctas">
+      <a href="shop.html" class="btn-primary">Explore Collection</a>
+      <a href="#ritual" class="btn-ghost">Our Ritual</a>
+    </div>
+  

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSC 405 Project</title>
+
+    <style>
+        /* ===== BODY STYLE ===== */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+
+            /* Background image */
+            background: url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* ===== BLUR EFFECT ===== */
+        .blur-container {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.6);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;   /* Horizontal center */
+            align-items: center;       /* Vertical center */
+        }
+
+        /* ===== MAIN CONTENT BOX ===== */
+        .content {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 900px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        /* ===== TABLE STYLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: auto; /* Center table */
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        /* ===== SOCIAL LINKS ===== */
+        .social-links {
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            text-decoration: none;
+            margin: 10px;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .social-links a:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="blur-container">
+    <div class="content">
+
+        <!-- PROJECT TITLE -->
+        <h1>CSC 405</h1>
+        <h2>CSC 405 Project</h2>
+
+        <!-- PREMIER LEAGUE TABLE -->
+        <table>
+            <tr>
+                <th>Manchester City</th>
+                <th>Arsenal</th>
+                <th>Liverpool</th>
+                <th>Aston Villa</th>
+                <th>Tottenham</th>
+                <th>Manchester United</th>
+            </tr>
+            <tr>
+                <td>62</td>
+                <td>60</td>
+                <td>58</td>
+                <td>55</td>
+                <td>53</td>
+                <td>50</td>
+            </tr>
+        </table>
+
+        <!-- SOCIAL MEDIA LINKS -->
+        <div class="social-links">
+            <a href="https://www.youtube.com" target="_blank">YouTube</a>
+            <a href="https://www.facebook.com" target="_blank">Facebook</a><p>
+            <a href="https://www.twitter.com" target="_blank">Twitter</a></p>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,203 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>csc 405 project</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        /* CSS Variables for easy color management */
-        :root {
-            --primary-orange: #FF8C00;
-            --dark-bg: #1a1a1a;
-            --glass-white: rgba(255, 255, 255, 0.95);
-        }
+  <title>CSC 405 Project</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            background-color: var(--primary-orange); /* Requirement ii */
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end; /* Requirement iii: Align at the right */
-            min-height: 100vh;
-        }
+    body {
+      min-height: 100vh;
+      font-family: 'Rajdhani', sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px 60px;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-        .project-card {
-            width: 100%;
-            max-width: 900px;
-            background: var(--glass-white);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: -10px 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            animation: slideIn 0.8s ease-out;
-        }
+    /* Dark animated gradient background */
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        @keyframes slideIn {
-            from { transform: translateX(50px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #021a0e, #064d29, #0a3d1f, #03200f, #085c30, #042e18);
+      background-size: 400% 400%;
+      animation: gradientShift 12s ease infinite;
+      z-index: -1;
+    }
 
-        header {
-            text-align: center;
-            border-bottom: 3px solid var(--primary-orange);
-            margin-bottom: 30px;
-            padding-bottom: 10px;
-        }
+    .container {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+    }
 
-        header h1 {
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #333;
-            margin: 0;
-            font-size: 2.5rem;
-        }
+    h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.8rem);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 0 30px rgba(56,189,248,0.7), 0 2px 8px rgba(0,0,0,0.6);
+      margin-bottom: 6px;
+    }
 
-        /* Table Styling - Requirement i */
-        .table-container {
-            overflow-x: auto; /* Makes it mobile friendly */
-            margin: 30px 0;
-        }
+    .subtitle {
+      font-size: 1rem;
+      letter-spacing: 8px;
+      color: #38bdf8;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+      opacity: 0.85;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+    /* Live badge */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.5);
+      border-radius: 999px;
+      padding: 5px 16px;
+      font-size: 0.78rem;
+      letter-spacing: 3px;
+      color: #f87171;
+      margin-bottom: 28px;
+    }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
 
-        th {
-            background-color: #333;
-            color: white;
-            padding: 15px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
+    /* Table */
+    .table-wrap {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
 
-        td {
-            border: 1px solid #eee;
-            padding: 15px;
-            text-align: center;
-            color: #444;
-            font-weight: 500;
-        }
+    table { width: 100%; border-collapse: collapse; }
 
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        
-        .logo-col {
-            background: #3d195a;
-            color: white !important;
-            font-weight: bold;
-        }
+    thead tr {
+      background: linear-gradient(90deg, rgba(56,189,248,0.25), rgba(99,102,241,0.2));
+    }
+    th {
+      padding: 14px 12px;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #38bdf8;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      line-height: 1.6;
+    }
 
-        /* Interactive Buttons - Requirement iv */
-        .social-section {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.2s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(56,189,248,0.08); }
 
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 25px;
-            margin: 10px;
-            border-radius: 50px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+    td {
+      padding: 14px 12px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
 
-        .btn i { margin-right: 10px; font-size: 1.2rem; }
+    .rank { color: #94a3b8; font-size: 0.85rem; }
+    .team-name { text-align: left; display: flex; align-items: center; gap: 10px; }
+    .club-logo { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5)); }
+    .pts { color: #38bdf8; font-size: 1.15rem; font-family: 'Oswald', sans-serif; }
+    .pts-loading { animation: blink 1s infinite; }
+    @keyframes blink { 50%{opacity:0.3} }
 
-        .btn-tiktok { background: #000000; }
-        .btn-facebook { background: #1877F2; }
-        .btn-twitter { background: #1DA1F2; }
+    /* Social links */
+    .social { display: flex; justify-content: center; gap: 18px; margin-top: 36px; }
+    .social a {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 24px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid;
+    }
+    .social a:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .yt  { color: #f87171; border-color: rgba(248,113,113,0.4); background: rgba(248,113,113,0.08); }
+    .fb  { color: #60a5fa; border-color: rgba(96,165,250,0.4); background: rgba(96,165,250,0.08); }
+    .tw  { color: #38bdf8; border-color: rgba(56,189,248,0.4); background: rgba(56,189,248,0.08); }
 
-        .btn:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-
-        .btn:active { transform: scale(0.95); }
-
-        footer {
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: #666;
-            text-align: center;
-        }
-    </style>
+    .footer { margin-top: 40px; font-size: 0.75rem; color: rgba(255,255,255,0.3); letter-spacing: 2px; }
+    .last-updated { font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-top: 10px; letter-spacing: 1px; }
+  </style>
 </head>
 <body>
+<div class="container">
+  <h1>CSC 405</h1>
+  <p class="subtitle">Premier League Dashboard</p>
 
-    <div class="project-card">
-        <header>
-            <h1>csc 405</h1>
-        </header>
+  <div class="live-badge">
+    <span class="live-dot"></span> LIVE DATA
+  </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Logo</th>
-                        <th>Club 1</th>
-                        <th>Club 2</th>
-                        <th>Club 3</th>
-                        <th>Club 4</th>
-                        <th>Club 5</th>
-                        <th>Zone</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="logo-col"><i class="fas fa-trophy"></i></td>
-                        <td>Arsenal<br><small>61 Pts</small></td>
-                        <td>Man City<br><small>56 Pts</small></td>
-                        <td>Aston Villa<br><small>51 Pts</small></td>
-                        <td>Man Utd<br><small>48 Pts</small></td>
-                        <td>Chelsea<br><small>45 Pts</small></td>
-                        <td>Champions</td>
-                    </tr>
-                    <tr>
-                        <td class="logo-col"><i class="fas fa-chart-line"></i></td>
-                        <td>Liverpool<br><small>45 Pts</small></td>
-                        <td>Brentford<br><small>40 Pts</small></td>
-                        <td>Bournemouth<br><small>38 Pts</small></td>
-                        <td>Everton<br><small>37 Pts</small></td>
-                        <td>Fulham<br><small>37 Pts</small></td>
-                        <td>Top Half</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr id="thead-row">
+          <!-- 6 club name headers injected by JS -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="data-row">
+          <!-- 6 points cells injected by JS -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-        <div class="social-section">
-            <p>Connect with the League</p>
-            <a href="https://www.tiktok.com" class="btn btn-tiktok" target="_blank">
-                <i class="fab fa-tiktok"></i> TikTok
-            </a>
-            <a href="https://www.facebook.com" class="btn btn-facebook" target="_blank">
-                <i class="fab fa-facebook-f"></i> Facebook
-            </a>
-            <a href="https://www.twitter.com" class="btn btn-twitter" target="_blank">
-                <i class="fab fa-twitter"></i> Twitter
-            </a>
-        </div>
+  <p class="last-updated" id="updated"></p>
 
-        <footer>
-            &copy; 2026 CSC 405 Web Design Project
-        </footer>
-    </div>
+  <div class="social">
+    <a class="yt" href="https://youtube.com" target="_blank">▶ YouTube</a>
+    <a class="fb" href="https://facebook.com" target="_blank">f Facebook</a>
+    <a class="tw" href="https://twitter.com" target="_blank">✕ Twitter</a>
+  </div>
 
+  <p class="footer">CSC 405 PROJECT &mdash; WEB DESIGN</p>
+</div>
+
+<script>
+  const FALLBACK_LOGOS = {
+    'Arsenal':           'https://a.espncdn.com/i/teamlogos/soccer/500/359.png',
+    'Manchester City':   'https://a.espncdn.com/i/teamlogos/soccer/500/382.png',
+    'Aston Villa':       'https://a.espncdn.com/i/teamlogos/soccer/500/362.png',
+    'Manchester United': 'https://a.espncdn.com/i/teamlogos/soccer/500/360.png',
+    'Chelsea':           'https://a.espncdn.com/i/teamlogos/soccer/500/363.png',
+    'Liverpool':         'https://a.espncdn.com/i/teamlogos/soccer/500/364.png',
+  };
+
+  const FALLBACK = [
+    { name:'Arsenal',          logo:FALLBACK_LOGOS['Arsenal'],           gp:28, w:18, d:7, pts:61 },
+    { name:'Manchester City',  logo:FALLBACK_LOGOS['Manchester City'],   gp:27, w:17, d:5, pts:56 },
+    { name:'Aston Villa',      logo:FALLBACK_LOGOS['Aston Villa'],       gp:28, w:15, d:6, pts:51 },
+    { name:'Manchester United',logo:FALLBACK_LOGOS['Manchester United'], gp:27, w:13, d:9, pts:48 },
+    { name:'Chelsea',          logo:FALLBACK_LOGOS['Chelsea'],           gp:27, w:12, d:9, pts:45 },
+    { name:'Liverpool',        logo:FALLBACK_LOGOS['Liverpool'],         gp:27, w:13, d:6, pts:45 },
+  ];
+
+  async function fetchStandings() {
+    const url = 'https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings';
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('Network error');
+    const json = await resp.json();
+    const groups = json.children?.[0]?.standings?.entries || [];
+    return groups.slice(0,6).map(entry => {
+      const stats = {};
+      (entry.stats || []).forEach(s => stats[s.name] = s.value);
+      const logo = entry.team?.logos?.[0]?.href || FALLBACK_LOGOS[entry.team?.displayName] || '';
+      return {
+        name: entry.team?.displayName || '—',
+        logo,
+        gp:  stats['gamesPlayed'] ?? '—',
+        w:   stats['wins']        ?? '—',
+        d:   stats['ties']        ?? '—',
+        pts: stats['points']      ?? '—',
+      };
+    });
+  }
+
+  function render(teams) {
+    const thead = document.getElementById('thead-row');
+    const tdata = document.getElementById('data-row');
+    thead.innerHTML = '';
+    tdata.innerHTML = '';
+    teams.slice(0,6).forEach(t => {
+      const th = document.createElement('th');
+      th.innerHTML = `<img src="${t.logo}" alt="${t.name}" class="club-logo"><br>${t.name}`;
+      thead.appendChild(th);
+      const td = document.createElement('td');
+      td.className = 'pts';
+      td.textContent = t.pts;
+      tdata.appendChild(td);
+    });
+    document.getElementById('updated').textContent =
+      'Last updated: ' + new Date().toLocaleString();
+  }
+
+  async function load() {
+    try {
+      const teams = await fetchStandings();
+      if (teams.length < 3) throw new Error('Bad data');
+      render(teams);
+    } catch(e) {
+      console.warn('Live fetch failed, using fallback:', e);
+      render(FALLBACK);
+    }
+  }
+
+  load();
+  setInterval(load, 60000); // refresh every 60s
+</script>
 </body>
 </html>
